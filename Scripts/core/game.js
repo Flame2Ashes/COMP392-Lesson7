@@ -25,6 +25,8 @@ var Vector3 = THREE.Vector3;
 var Face3 = THREE.Face3;
 var Point = objects.Point;
 var CScreen = config.Screen;
+var Clock = THREE.Clock;
+var FirstPersonControls = THREE.FirstPersonControls;
 //Custom Game Objects
 var gameObject = objects.gameObject;
 var game = (function () {
@@ -42,9 +44,13 @@ var game = (function () {
     var gui;
     var stats;
     var step = 0;
+    var clock;
+    var firstPersonControls;
     function init() {
         // Instantiate a new Scene object
         scene = new Scene();
+        //setup a THREE.JS Clock object
+        clock = new Clock();
         setupRenderer(); // setup the default renderer
         setupCamera(); // setup the camera
         //Add a Plane to the Scene
@@ -60,6 +66,17 @@ var game = (function () {
         sphere.name = "The Red Planet";
         scene.add(sphere);
         console.log("Added Sphere to scene");
+        // setup first person controls
+        firstPersonControls = new FirstPersonControls(sphere);
+        firstPersonControls.lookSpeed = 0.4;
+        firstPersonControls.movementSpeed = 10;
+        firstPersonControls.lookVertical = true;
+        firstPersonControls.constrainVertical = true;
+        firstPersonControls.verticalMin = 0;
+        firstPersonControls.verticalMax = 2.0;
+        firstPersonControls.lon = -150;
+        firstPersonControls.lat = 120;
+        console.log(firstPersonControls.target);
         // add an axis helper to the scene
         axes = new AxisHelper(20);
         sphere.add(axes);
@@ -76,6 +93,9 @@ var game = (function () {
         spotLight.castShadow = true;
         spotLight.angle = 60 * (Math.PI / 180);
         spotLight.distance = 500;
+        spotLight.shadowCameraNear = 1;
+        spotLight.shadowMapHeight = 2048;
+        spotLight.shadowMapWidth = 2048;
         scene.add(spotLight);
         console.log("Added a SpotLight Light to Scene");
         // add controls
@@ -102,7 +122,9 @@ var game = (function () {
     // Setup main game loop
     function gameLoop() {
         stats.update();
+        var delta = clock.getDelta();
         sphere.rotation.y += control.rotationSpeed;
+        firstPersonControls.update(delta);
         // render using requestAnimationFrame
         requestAnimationFrame(gameLoop);
         // render the scene
