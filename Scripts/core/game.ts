@@ -31,22 +31,23 @@ import CScreen = config.Screen;
 //Custom Game Objects
 import gameObject = objects.gameObject;
 
+var game = (function(){
+    
 var scene: Scene;
 var renderer: Renderer;
 var camera: PerspectiveCamera;
 var axes: AxisHelper;
-var cube: Mesh;
-var plane: Mesh;
 var sphere: Mesh;
+var plane: Mesh;
+var sphereGeometry:SphereGeometry;
+var sphereMaterial:LambertMaterial;
 var ambientLight: AmbientLight;
 var spotLight: SpotLight;
 var control: Control;
 var gui: GUI;
 var stats: Stats;
 var step: number = 0;
-var cubeGeometry: CubeGeometry;
-var cubeMaterial: LambertMaterial;
-var childCube: Mesh;
+
 
 function init() {
     // Instantiate a new Scene object
@@ -55,39 +56,35 @@ function init() {
     setupRenderer(); // setup the default renderer
 	
     setupCamera(); // setup the camera
-	
-    // add an axis helper to the scene
-    axes = new AxisHelper(10);
-    scene.add(axes);
-    console.log("Added Axis Helper to scene...");
+
     
     //Add a Plane to the Scene
     plane = new gameObject(
         new PlaneGeometry(20, 20, 1, 1),
-        new LambertMaterial({ color: 0xff35ff }),
+        new LambertMaterial({ color: 0xf4a460 }),
         0, 0, 0);
-
+    plane.name = "ground";
     plane.rotation.x = -0.5 * Math.PI;
 
     scene.add(plane);
     console.log("Added Plane Primitive to scene...");
     
-    //Add a Cube to the Scene
-    cube = new gameObject(
-        new CubeGeometry(8, 8, 8),
-        new LambertMaterial({ color: 0xff35ff }),
-        0, 4, 0);
 
-    scene.add(cube);
-    console.log("Added Cube Primitive to scene...");
+    //Add sphere to the scene
     
-    childCube = new gameObject(
-        new CubeGeometry(2, 2, 2),
-        new LambertMaterial({ color: 0xff0000 }),
-        10, 0, 0);
-
-    cube.add(childCube)
-    console.log("Added Child Cube Primitive to cube object...");
+    sphereGeometry = new SphereGeometry(2.5, 32, 32);
+    sphereMaterial = new LambertMaterial({color: 0xff0000});
+    sphere = new gameObject(sphereGeometry, sphereMaterial, 0, 2.5, 0);
+    sphere.name = "The Red Planet";
+    scene.add(sphere);
+    
+    console.log("Added Sphere to scene");
+    
+          // add an axis helper to the scene
+    axes = new AxisHelper(20);
+    sphere.add(axes);
+    console.log("Added Axis Helper to scene...");
+    
     
     // Add an AmbientLight to the scene
     ambientLight = new AmbientLight(0x090909);
@@ -98,7 +95,10 @@ function init() {
     spotLight = new SpotLight(0xffffff);
     spotLight.position.set(5.6, 23.1, 5.4);
     spotLight.rotation.set(-0.8, 42.7, 19.5);
+    spotLight.intensity = 2;
     spotLight.castShadow = true;
+    spotLight.angle = 60 * (Math.PI / 180);
+    spotLight.distance = 500;
     scene.add(spotLight);
     console.log("Added a SpotLight Light to Scene");
     
@@ -114,16 +114,8 @@ function init() {
     document.body.appendChild(renderer.domElement);
     gameLoop(); // render the scene	
     
-    window.addEventListener('resize', onResize, false);
 }
 
-function onResize(): void {
-    camera.aspect = CScreen.RATIO;
-    //camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    //renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setSize(CScreen.WIDTH, CScreen.HEIGHT);
-}
 
 function addControl(controlObject: Control): void {
     gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
@@ -142,7 +134,7 @@ function addStatsObject() {
 function gameLoop(): void {
     stats.update();
 
-    cube.rotation.y += control.rotationSpeed;
+    sphere.rotation.y += control.rotationSpeed;
     
     // render using requestAnimationFrame
     requestAnimationFrame(gameLoop);
@@ -171,3 +163,12 @@ function setupCamera(): void {
     camera.lookAt(new Vector3(0, 0, 0));
     console.log("Finished setting up Camera...");
 }
+
+    window.onload = init;
+    
+    return {
+        scene:scene
+    }
+})();
+
+
