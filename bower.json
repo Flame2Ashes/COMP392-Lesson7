@@ -1,13 +1,13 @@
 {
-  "name": "comp392-lesson5",
+  "name": "comp392-lesson6",
   "authors": [
-    "Tom Tsiliopoulos <tsiliopoulos@hotmail.com>"
+    "Angelina Gutierrez <angelina.ogutierrez@gmail.com>"
   ],
-  "description": "COMP392-Lesson5 for Advanced Graphics",
+  "description": "COMP392-Lesson6 for Advanced Graphics",
   "main": "",
   "moduleType": [],
   "license": "MIT",
-  "homepage": "https://github.com/CentennialCollege/COMP392-Lesson5",
+  "homepage": "https://github.com/Flame2Ashes/COMP392-Lesson6",
   "ignore": [
     "**/.*",
     "node_modules",
