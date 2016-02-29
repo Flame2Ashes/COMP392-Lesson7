@@ -1,13 +1,13 @@
 {
-  "name": "comp392-lesson6",
+  "name": "comp392-lesson7",
   "authors": [
     "Angelina Gutierrez <angelina.ogutierrez@gmail.com>"
   ],
-  "description": "COMP392-Lesson6 for Advanced Graphics",
+  "description": "COMP392-Lesson7 for Advanced Graphics",
   "main": "",
   "moduleType": [],
   "license": "MIT",
-  "homepage": "https://github.com/Flame2Ashes/COMP392-Lesson6",
+  "homepage": "https://github.com/Flame2Ashes/COMP392-Lesson7",
   "ignore": [
     "**/.*",
     "node_modules",
